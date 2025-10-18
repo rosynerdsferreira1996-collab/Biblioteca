@@ -5,7 +5,7 @@ from collections import deque
 # ---------- INICIALIZAÇÃO ----------
 if "livros" not in st.session_state:  
     st.session_state.livros = [
-        {"Título": "Fundamentos de Python 🐍", "Autor": "João Silva", "Gênero": "Tecnologia",
+        {"Título": "Fundamentos de Python 🐍", "Autor": "Rosielly Silva", "Gênero": "Tecnologia",
          "Quantidade Total": 5, "Emprestados": 0, "Disponíveis": 5, "Status": "Disponível"},
         {"Título": "Algoritmos e Estruturas ⚙️", "Autor": "Maria Souza", "Gênero": "Tecnologia",
          "Quantidade Total": 3, "Emprestados": 0, "Disponíveis": 3, "Status": "Disponível"},
