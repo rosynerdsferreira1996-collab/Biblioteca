@@ -1,36 +1,23 @@
+from tads.biblioteca import *
 import streamlit as st
 import pandas as pd
-from collections import deque
 import time
+from tads.biblioteca import  (
+    inicializar_biblioteca, inicializar_fila, inicializar_pilha,
+    atualizar_status, atualizar_contadores_gerais, bubble_sort
+)
 
 # ---------- INICIALIZAÇÃO ----------
-if "livros" not in st.session_state:  
-    st.session_state.livros = [
-        {"Título": "Fundamentos de Python 🐍", "Autor": "Rosielly Silva", "Gênero": "Tecnologia",
-         "Quantidade Total": 5, "Emprestados": 0, "Disponíveis": 5, "Status": "Disponível"},
-        {"Título": "Algoritmos e Estruturas ⚙️", "Autor": "Maria Souza", "Gênero": "Tecnologia",
-         "Quantidade Total": 3, "Emprestados": 0, "Disponíveis": 3, "Status": "Disponível"},
-        {"Título": "História do Amazonas 🌳", "Autor": "Carlos Lima", "Gênero": "História",
-         "Quantidade Total": 4, "Emprestados": 0, "Disponíveis": 4, "Status": "Disponível"},
-        {"Título": "Romance Amazônico ❤️", "Autor": "Ana Pereira", "Gênero": "Romance",
-         "Quantidade Total": 2, "Emprestados": 0, "Disponíveis": 2, "Status": "Disponível"},
-    ]
+if "livros" not in st.session_state:
+    st.session_state.livros = inicializar_biblioteca()
 
 if "fila_emprestimos" not in st.session_state:
-    st.session_state.fila_emprestimos = deque()
+    st.session_state.fila_emprestimos = inicializar_fila()
 
 if "pilha_devolucoes" not in st.session_state:
-    st.session_state.pilha_devolucoes = []
+    st.session_state.pilha_devolucoes = inicializar_pilha()
 
-# ---------- FUNÇÕES ----------
-def bubble_sort(livros, chave):
-    n = len(livros)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if livros[j][chave] > livros[j + 1][chave]:
-                livros[j], livros[j + 1] = livros[j + 1], livros[j]
-    return livros
-
+# ---------- FUNÇÕES VISUAIS ----------
 def mostrar_tabela(livros):
     df = pd.DataFrame(livros)
     df.index = range(1, len(df) + 1)
@@ -38,15 +25,6 @@ def mostrar_tabela(livros):
 
 def separar():
     st.markdown("---")
-
-def atualizar_status(livro):
-    livro["Status"] = "Indisponível" if livro["Disponíveis"] == 0 else "Disponível"
-
-def atualizar_contadores_gerais():
-    total = sum(l["Quantidade Total"] for l in st.session_state.livros)
-    emprestados = sum(l["Emprestados"] for l in st.session_state.livros)
-    disponiveis = sum(l["Disponíveis"] for l in st.session_state.livros)
-    return total, emprestados, disponiveis
 
 # ---------- INTERFACE ----------
 st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca - NESNAP/UEA 📚</h1>", unsafe_allow_html=True)
@@ -61,11 +39,14 @@ menu = st.sidebar.selectbox("Escolha uma opção", [
     "📊 Estatísticas"
 ])
 
+#  Daqui pra baixo, copia o mesmo código das opções (Ver, Emprestar, Cadastrar, etc)
+# É exatamente o mesmo, só que agora usando as funções importadas da pasta tads.
+
 # ---------- VER LIVROS ----------
 if menu == "📖 Ver Livros":
     st.header("📚 Lista de Livros")
 
-    total, emprestados, disponiveis = atualizar_contadores_gerais()
+    total, emprestados, disponiveis = atualizar_contadores_gerais(st.session_state.livros)
     st.info(f"**Total de exemplares:** {total} | **Emprestados:** {emprestados} | **Disponíveis:** {disponiveis}")
 
     # 🔍 Buscar Livro
@@ -226,7 +207,7 @@ elif menu == "🗑️ Remover Livro":
 # ---------- ESTATÍSTICAS ----------
 elif menu == "📊 Estatísticas":
     st.header("📊 Estatísticas da Biblioteca")
-    total, emprestados, disponiveis = atualizar_contadores_gerais()
+    total, emprestados, disponiveis = atualizar_contadores_gerais(st.session_state.livros)
     st.metric("📚 Total de Exemplares", total)
     st.metric("📕 Emprestados", emprestados)
     st.metric("📗 Disponíveis", disponiveis)
@@ -235,4 +216,3 @@ elif menu == "📊 Estatísticas":
     top_emprestados = df.sort_values(by="Emprestados", ascending=False).head(5)
     st.subheader("🏆 Top 5 Livros Mais Emprestados")
     st.bar_chart(top_emprestados.set_index("Título")["Emprestados"])
-
