@@ -48,14 +48,14 @@ def atualizar_contadores_gerais():
     return total, emprestados, disponiveis
 
 # ---------- INTERFACE ----------
-st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca da UEA 📚</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca - NESNAP/UEA 📚</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("### 🛠 Menu")
 
 menu = st.sidebar.selectbox("Escolha uma opção", [
     "📖 Ver Livros",
     "📥 Empréstimo/Devolução",
     "➕ Cadastrar Livro",
-    "✏️ Editar Livro",
+    "✏️ Editar Cadastro",
     "🗑️ Remover Livro",
     "📊 Estatísticas"
 ])
