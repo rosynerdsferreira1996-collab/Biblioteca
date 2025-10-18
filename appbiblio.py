@@ -3,7 +3,7 @@ import pandas as pd
 from collections import deque
 
 # ---------- INICIALIZAÇÃO ----------
-if "livros" not in st.session_state:
+if "livros" not in st.session_state:  
     st.session_state.livros = [
         {"Título": "Fundamentos de Python 🐍", "Autor": "João Silva", "Gênero": "Tecnologia",
          "Quantidade Total": 5, "Emprestados": 0, "Disponíveis": 5, "Status": "Disponível"},
