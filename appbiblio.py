@@ -48,7 +48,7 @@ def atualizar_contadores_gerais():
     return total, emprestados, disponiveis
 
 # ---------- INTERFACE ----------
-st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca - UEA 📚</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca da UEA 📚</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("### 🛠 Menu")
 
 menu = st.sidebar.selectbox("Escolha uma opção", [
@@ -109,7 +109,7 @@ elif menu == "📥 Empréstimo/Devolução":
                         atualizar_status(l)
                         st.session_state.fila_emprestimos.append({"Aluno": aluno, "Livro": l["Título"]})
                         st.success(f"✅ Livro '{l['Título']}' emprestado para {aluno}!")
-                        st.info(f"📘 O livro '{l['Título']}' foi emprestado com sucesso e agora possui {l['Disponíveis']} disponíveis.")
+                        st.info(f"📘 O livro '{l['Título']}' foi emprestado e agora possui {l['Disponíveis']} disponíveis.")
                 st.rerun()
     else:
         st.info("📭 Nenhum exemplar disponível para empréstimo.")
@@ -141,6 +141,85 @@ elif menu == "📥 Empréstimo/Devolução":
     else:
         st.info("📭 Nenhum livro emprestado no momento.")
 
-# ---------- CADASTRAR, EDITAR, REMOVER, ESTATÍSTICAS ----------
-# (mantém igual ao seu último código, sem alterações nessas partes)
+# ---------- CADASTRAR LIVRO ----------
+elif menu == "➕ Cadastrar Livro":
+    st.header("📥 Cadastrar Novo Livro")
+    titulo = st.text_input("Título")
+    autor = st.text_input("Autor")
+    genero = st.text_input("Gênero")
+    quantidade = st.number_input("Quantidade total", min_value=1, step=1)
+
+    if st.button("➕ Adicionar Livro"):
+        if not titulo or not autor or not genero:
+            st.warning("⚠️ Preencha todos os campos antes de adicionar o livro!")
+        else:
+            novo = {
+                "Título": titulo,
+                "Autor": autor,
+                "Gênero": genero,
+                "Quantidade Total": quantidade,
+                "Emprestados": 0,
+                "Disponíveis": quantidade,
+                "Status": "Disponível"
+            }
+            st.session_state.livros.append(novo)
+            st.success(f"📚 Livro '{titulo}' adicionado à biblioteca com {quantidade} exemplares!")
+            st.rerun()
+
+# ---------- EDITAR LIVRO ----------
+elif menu == "✏️ Editar Livro":
+    st.header("✏️ Editar Livro")
+    if st.session_state.livros:
+        livro_editar = st.selectbox("Selecione o livro para editar", [l["Título"] for l in st.session_state.livros])
+        livro = next(l for l in st.session_state.livros if l["Título"] == livro_editar)
+
+        novo_titulo = st.text_input("Novo Título", value=livro["Título"])
+        novo_autor = st.text_input("Novo Autor", value=livro["Autor"])
+        novo_genero = st.text_input("Novo Gênero", value=livro["Gênero"])
+        nova_qtd = st.number_input("Nova Quantidade Total", min_value=livro["Emprestados"], step=1, value=livro["Quantidade Total"])
+
+        if st.button("💾 Salvar Alterações"):
+            dif = nova_qtd - livro["Quantidade Total"]
+            livro["Título"] = novo_titulo
+            livro["Autor"] = novo_autor
+            livro["Gênero"] = novo_genero
+            livro["Quantidade Total"] = nova_qtd
+            livro["Disponíveis"] += dif
+            if livro["Disponíveis"] < 0:
+                livro["Disponíveis"] = 0
+            atualizar_status(livro)
+            st.success(f"✅ Alterações salvas! O livro '{livro['Título']}' foi atualizado com sucesso.")
+            st.info("ℹ️ A tabela de livros foi atualizada automaticamente.")
+            st.rerun()
+    else:
+        st.info("📚 Nenhum livro cadastrado para editar.")
+
+# ---------- REMOVER LIVRO ----------
+elif menu == "🗑️ Remover Livro":
+    st.header("🗑️ Remover Livro da Biblioteca")
+    if st.session_state.livros:
+        livro_remover = st.selectbox("Selecione o livro para remover", [l["Título"] for l in st.session_state.livros])
+        confirmar = st.checkbox("Confirmar remoção permanente")
+        if st.button("❌ Remover Livro"):
+            if confirmar:
+                st.session_state.livros = [l for l in st.session_state.livros if l["Título"] != livro_remover]
+                st.success(f"📕 Livro '{livro_remover}' removido da biblioteca!")
+                st.rerun()
+            else:
+                st.warning("⚠️ Marque a opção de confirmação para remover o livro.")
+    else:
+        st.info("📚 Nenhum livro cadastrado na biblioteca.")
+
+# ---------- ESTATÍSTICAS ----------
+elif menu == "📊 Estatísticas":
+    st.header("📊 Estatísticas da Biblioteca")
+    total, emprestados, disponiveis = atualizar_contadores_gerais()
+    st.metric("📚 Total de Exemplares", total)
+    st.metric("📕 Emprestados", emprestados)
+    st.metric("📗 Disponíveis", disponiveis)
+
+    df = pd.DataFrame(st.session_state.livros)
+    top_emprestados = df.sort_values(by="Emprestados", ascending=False).head(5)
+    st.subheader("🏆 Top 5 Livros Mais Emprestados")
+    st.bar_chart(top_emprestados.set_index("Título")["Emprestados"])
 
