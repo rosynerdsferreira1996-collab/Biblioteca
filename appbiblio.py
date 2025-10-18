@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from collections import deque
+import time
 
 # ---------- INICIALIZAÇÃO ----------
 if "livros" not in st.session_state:  
@@ -91,13 +92,19 @@ if menu == "📖 Ver Livros":
         mostrar_tabela(resultados if resultados else st.session_state.livros)
 
 # ---------- EMPRÉSTIMO / DEVOLUÇÃO ----------
+
+
 elif menu == "📥 Empréstimo/Devolução":
     st.header("📤 Empréstimo de Livro")
     disponiveis = [l for l in st.session_state.livros if l["Disponíveis"] > 0]
 
     if disponiveis:
-        livro_emprestar = st.selectbox("Escolha o livro para emprestar", [l["Título"] for l in disponiveis])
+        livro_emprestar = st.selectbox(
+            "Escolha o livro para emprestar",
+            [l["Título"] for l in disponiveis]
+        )
         aluno = st.text_input("Nome do aluno")
+
         if st.button("📥 Emprestar"):
             if not aluno:
                 st.warning("⚠️ Digite o nome do aluno antes de realizar o empréstimo!")
@@ -107,10 +114,16 @@ elif menu == "📥 Empréstimo/Devolução":
                         l["Emprestados"] += 1
                         l["Disponíveis"] -= 1
                         atualizar_status(l)
-                        st.session_state.fila_emprestimos.append({"Aluno": aluno, "Livro": l["Título"]})
-                        st.success(f"✅ Livro '{l['Título']}' emprestado para {aluno}!")
-                        st.info(f"📘 O livro '{l['Título']}' foi emprestado e agora possui {l['Disponíveis']} disponíveis.")
-                st.rerun()
+                        st.session_state.fila_emprestimos.append(
+                            {"Aluno": aluno, "Livro": l["Título"]}
+                        )
+
+                        # 🔔 Cria espaço para mensagem temporária
+                        msg = st.empty()
+                        msg.success(f"✅ Livro '{l['Título']}' emprestado para {aluno}!")
+                        st.info(f"📘 Agora restam {l['Disponíveis']} disponíveis.")
+                        time.sleep(3)  # fica 3 segundos na tela
+                        msg.empty()    # limpa a mensagem
     else:
         st.info("📭 Nenhum exemplar disponível para empréstimo.")
 
@@ -167,8 +180,8 @@ elif menu == "➕ Cadastrar Livro":
             st.rerun()
 
 # ---------- EDITAR LIVRO ----------
-elif menu == "✏️ Editar Livro":
-    st.header("✏️ Editar Livro")
+elif menu == "✏️ Editar Cadastro":
+    st.header("✏️ Editar Cadastro")
     if st.session_state.livros:
         livro_editar = st.selectbox("Selecione o livro para editar", [l["Título"] for l in st.session_state.livros])
         livro = next(l for l in st.session_state.livros if l["Título"] == livro_editar)
