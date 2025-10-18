@@ -39,8 +39,6 @@ menu = st.sidebar.selectbox("Escolha uma opção", [
     "📊 Estatísticas"
 ])
 
-#  Daqui pra baixo, copia o mesmo código das opções (Ver, Emprestar, Cadastrar, etc)
-# É exatamente o mesmo, só que agora usando as funções importadas da pasta tads.
 
 # ---------- VER LIVROS ----------
 if menu == "📖 Ver Livros":
