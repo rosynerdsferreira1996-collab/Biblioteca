@@ -3,13 +3,13 @@ from collections import deque
 # ---------- ESTRUTURAS ----------
 def inicializar_biblioteca():
     return [
-        {"Título": "Fundamentos de Python 🐍", "Autor": "Rosielly Silva", "Gênero": "Tecnologia",
+        {"Título": "Fundamentos de Python 🐍", "Autor": "Rose Ferreira", "Gênero": "Tecnologia",
          "Quantidade Total": 5, "Emprestados": 0, "Disponíveis": 5, "Status": "Disponível"},
-        {"Título": "Algoritmos e Estruturas ⚙️", "Autor": "Maria Souza", "Gênero": "Tecnologia",
+        {"Título": "Algoritmos e Estruturas ⚙️", "Autor": "Gabriele Martins", "Gênero": "Tecnologia",
          "Quantidade Total": 3, "Emprestados": 0, "Disponíveis": 3, "Status": "Disponível"},
-        {"Título": "História do Amazonas 🌳", "Autor": "Carlos Lima", "Gênero": "História",
+        {"Título": "História do Amazonas 🌳", "Autor": "Graziele Gouveia", "Gênero": "História",
          "Quantidade Total": 4, "Emprestados": 0, "Disponíveis": 4, "Status": "Disponível"},
-        {"Título": "Romance Amazônico ❤️", "Autor": "Ana Pereira", "Gênero": "Romance",
+        {"Título": "Romance Amazônico ❤️", "Autor": "Danielly Silva", "Gênero": "Romance",
          "Quantidade Total": 2, "Emprestados": 0, "Disponíveis": 2, "Status": "Disponível"},
     ]
 
