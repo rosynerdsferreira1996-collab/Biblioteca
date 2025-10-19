@@ -27,7 +27,7 @@ def separar():
     st.markdown("---")
 
 # ---------- INTERFACE ----------
-st.markdown("<h1 style='text-align: center; color: purple;'> Biblioteca - NESNAP/UEA 📚</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: green;'> BIBLIOTECA - NESNAP/UEA 📚</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("### 🛠 Menu")
 
 menu = st.sidebar.selectbox("Escolha uma opção", [
