@@ -2,6 +2,8 @@ from tads.biblioteca import *
 import streamlit as st
 import pandas as pd
 import time
+import base64
+
 from tads.biblioteca import  (
     inicializar_biblioteca, inicializar_fila, inicializar_pilha,
     atualizar_status, atualizar_contadores_gerais, bubble_sort
@@ -27,7 +29,108 @@ def separar():
     st.markdown("---")
 
 # ---------- INTERFACE ----------
-st.markdown("<h1 style='text-align: center; color: green;'> BIBLIOTECA - NESNAP/UEA 📚</h1>", unsafe_allow_html=True)
+#--------- FUNDO DO TITULO -----------
+def set_background(image_file):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+set_background("biblioteca_fundo.jpeg")
+
+# ---------- CABEÇALHO FIXO COM PARALLAX ----------
+with open("biblioteca_fundo.jpeg", "rb") as f:
+    header_img = base64.b64encode(f.read()).decode()
+
+st.markdown(f"""
+<style>
+
+/* ----- Cabeçalho fixo com parallax ----- */
+.titulo-fundo {{
+    background-image: url("data:image/jpeg;base64,{header_img}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}} 
+
+/* Camada translúcida */
+.titulo-overlay {{
+    background: rgba(0,0,0,0.55);
+    border-radius: 18px;
+    padding: 25px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    backdrop-filter: blur(6px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 30px; /* <-- AQUI abaixa o título */
+}}
+
+.titulo-overlay:hover {{
+    transform: scale(1.04);
+    box-shadow: 0 0 25px rgba(255,255,255,0.3);
+}}
+
+.titulo-overlay img {{
+    width: 75px;
+    transition: transform 0.3s ease;
+}}
+
+.titulo-overlay:hover img {{
+    transform: rotate(-5deg) scale(1.1);
+}}
+
+.titulo-overlay h1 {{
+    color: #fff;
+    font-weight: bold;
+    font-size: 40px;
+    margin: 0;
+    letter-spacing: 1.5px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+}} 
+
+/* Espaço pro conteúdo não ficar escondido */
+.spacer {{
+    height: 230px;
+}}
+</style>
+
+<!-- Cabeçalho fixo com parallax -->
+<div class="titulo-fundo">
+    <div class="titulo-overlay">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Brasaouea.png">
+        <h1>BIBLIOTECA - NESNAP/UEA</h1>
+    </div>
+</div>
+
+<div class="spacer"></div>
+""", unsafe_allow_html=True)
+
+#---------MENU-------
+
 st.sidebar.markdown("### 🛠 Menu")
 
 menu = st.sidebar.selectbox("Escolha uma opção", [

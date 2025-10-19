@@ -1,5 +1,6 @@
 from collections import deque
 
+
 # ---------- ESTRUTURAS ----------
 def inicializar_biblioteca():
     return [
@@ -18,6 +19,8 @@ def inicializar_fila():
 
 def inicializar_pilha():
     return []
+
+
 
 # ---------- FUNÇÕES PRINCIPAIS ----------
 def atualizar_status(livro):
