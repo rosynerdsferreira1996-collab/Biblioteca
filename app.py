@@ -9,6 +9,7 @@ from tads.biblioteca import  (
     atualizar_status, atualizar_contadores_gerais, bubble_sort
 )
 
+
 # ---------- INICIALIZAÇÃO ----------
 if "livros" not in st.session_state:
     st.session_state.livros = inicializar_biblioteca()
